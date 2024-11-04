@@ -1,0 +1,203 @@
+body {
+  background-color: #121212;
+  color: #FFFFFF;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.item-container div {
+  padding: 10px;
+  text-align: center;
+}
+
+body {
+  background-color: #121212;
+  color: #e0e0e0;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  color: #ffffff;
+}
+
+input[type="text"] {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+  border: 1px solid #333;
+  padding: 8px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+button {
+  background-color: #2d2d2d;
+  color: #e0e0e0;
+  border: 1px solid #444;
+  padding: 8px 12px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #3a3a3a;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+  //padding: 10px;
+  //margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-button {
+  background-color: #d32f2f;
+  color: #ffffff;
+  border: none;
+  padding: 5px 10px;
+}
+
+.delete-button:hover {
+  background-color: #b71c1c;
+}
+
+.next-button {
+  background-color: #35b429;
+  color: #ffffff;
+  border: none;
+  padding: 5px 10px;
+  //right: 0;
+  transform: translate(8px, -8px);
+  position: absolute;
+}
+
+.next-button:hover {
+  background-color: #1d8c14;
+}
+
+.column-generator {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.column {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+  padding: 10px;
+  margin: 5px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.match {
+  background-color: #2d2d2d;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #444;
+}
+
+.match.winner {
+  border-color: #388e3c;
+}
+
+.match.loser {
+  opacity: 0.6;
+}
+
+.cancel-button,
+.restart-button,
+.reset-button {
+  background-color: #d32f2f;
+  color: #ffffff;
+}
+
+.cancel-button:hover,
+.restart-button:hover,
+.reset-button:hover {
+  background-color: #b71c1c;
+}
+
+/* Styles spécifiques pour ColumnGenerator */
+.column-generator .round {
+  margin-bottom: 20px;
+}
+
+.column-generator .round-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.column-generator .team {
+  background-color: #424242;
+  padding: 8px;
+  margin-bottom: 5px;
+  color: #e0e0e0;
+}
+
+.column-generator .team.selected {
+  background-color: #616161;
+}
+
+.column-generator .team:hover {
+  background-color: #757575;
+  cursor: pointer;
+}
+
+//.cell {
+//  position: relative;
+//}
+
+/* ColumnGenerator.scss ou Global.scss */
+
+//.cell {
+//}
+
+//li.item-container {
+//}
+
+li.terminated-cell.red-cell {
+  background-color: darken(#8a3838, 2%);
+}
+
+li.waiting-cell.red-cell {
+  background-color: darken(#474780, 2%);
+}
+
+li.confrontable-cell.red-cell {
+  background-color: darken(#888842, 2%);
+}
+
+li.terminated-cell.blue-cell {
+  background-color: #8a3838;
+}
+
+li.waiting-cell.blue-cell {
+  background-color: #474780;
+}
+
+li.confrontable-cell.blue-cell {
+  background-color: #888842;
+}
+
+
+
