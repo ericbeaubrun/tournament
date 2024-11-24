@@ -1,17 +1,17 @@
 import "./ColumnGenerator.scss";
 import "./App.scss";
 import {EMPTY, EXEMPT} from "./config.js";
-import "./BracketTree.js";
+import "./BracketUtils.js";
 import {
-    collecterNoeudsAvecFrereEmpty,
-    collecterNoeudsEmpty,
+    collectNodesWithEmptyNear,
+    collectEmptyNodes,
     findConfrontableAdresses
-} from "./BracketTree.js";
+} from "./BracketUtils.js";
 
 const ColumnGenerator = ({heap, participantNames, restartTournament, resetTournament, cancelTournament, onWin}) => {
     const buttonsAddresses = findConfrontableAdresses(heap);
-    const aloneAddresses = collecterNoeudsAvecFrereEmpty(heap);
-    const emptyAddresses = collecterNoeudsEmpty(heap);
+    const aloneAddresses = collectNodesWithEmptyNear(heap);
+    const emptyAddresses = collectEmptyNodes(heap);
 
     const isTournamentOver = buttonsAddresses.length === 0;
 

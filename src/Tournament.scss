@@ -192,8 +192,6 @@ input, textarea {
   }
 }
 
-
-//TODO
 .scrollable {
   max-height: 200px;
   overflow-y: auto;
@@ -215,4 +213,17 @@ li.item-container {
 .draggable-icon {
   height: 40px;
   width: 40px;
+}
+
+.cancel-button,
+.restart-button,
+.reset-button {
+  background-color: #d32f2f;
+  color: #ffffff;
+}
+
+.cancel-button:hover,
+.restart-button:hover,
+.reset-button:hover {
+  background-color: #b71c1c;
 }

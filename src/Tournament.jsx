@@ -1,17 +1,17 @@
 import "./App.scss";
 import './Tournament.scss';
+import 'react-toastify/dist/ReactToastify.css';
 import ColumnGenerator from "./ColumnGenerator.jsx";
 import {useState, useEffect} from "react";
 import {EXEMPT, EMPTY, PARTICIPANTS_ANIMATION_DURATION} from "./config.js";
-import ParticipantItem from "./ParticipantItem.jsx";
-import {DndProvider} from 'react-dnd';
-import {HTML5Backend} from 'react-dnd-html5-backend';
-import {motion, AnimatePresence} from 'framer-motion';
 import {ToastContainer, toast} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import ButtonsContainer from "./ButtonsContainer.jsx";
+import StartButton from "./StartButton.jsx";
+import ParticipantList from "./ParticipantList.jsx";
+import {buildHeap, sortParticipantList} from './BracketUtils.js';
 
 const Tournament = () => {
-    const [lineCount, setLineCount] = useState(0);
+    const [lineCount, setLineCount] = useState(0); // Puissance de 2
     const [heap, setHeap] = useState([]);
     const [heapHistory, setHeapHistory] = useState([]);
     const [currentParticipantName, setCurrentParticipantName] = useState("");
@@ -108,56 +108,10 @@ const Tournament = () => {
         toast.info("Tous les participants ont été supprimés.");
     };
 
-    const sortParticipantList = () => {
-        let tmpParticipants = Array.from({length: lineCount}, (_, i) => `${i + 1}`);
-
-        const nextPowerOf2 = Math.pow(2, Math.ceil(Math.log2(lineCount)));
-        const numberOfExempts = nextPowerOf2 - tmpParticipants.length;
-
-        for (let i = 0; i < numberOfExempts; i++) {
-            const insertIndex = 2 * i + 1;
-            if (insertIndex >= tmpParticipants.length) {
-                tmpParticipants.push(EXEMPT);
-            } else {
-                tmpParticipants.splice(insertIndex, 0, EXEMPT);
-            }
-        }
-
-        setParticipants(tmpParticipants);
-        return tmpParticipants;
-    };
-
-    const buildHeap = (list) => {
-        const n = list.length;
-        const tree = Array(2 * n - 1).fill(EMPTY);
-
-        for (let i = 0; i < n; i++) {
-            tree[n - 1 + i] = list[i];
-        }
-
-        for (let i = n - 2; i >= 0; i--) {
-            const leftChild = tree[2 * i + 1];
-            const rightChild = tree[2 * i + 2];
-
-            if (leftChild !== EXEMPT && rightChild !== EXEMPT) {
-                tree[i] = EMPTY;
-            } else if (leftChild === EXEMPT) {
-                tree[i] = rightChild;
-            } else if (rightChild === EXEMPT) {
-                tree[i] = leftChild;
-            }
-        }
-
-        return tree;
-    };
-
-    // Fix le bug
     const cancelTournament = () => {
         setIsTournamentStarted(false);
         setIsTournamentOver(false)
         toast.info("Le tournoi a été annulé.");
-        console.log(participantNames);
-        console.log(heap);
     };
 
     const resetTournament = () => {
@@ -177,7 +131,9 @@ const Tournament = () => {
 
     const startTournament = () => {
         if (lineCount > 1) {
-            let sortedParticipants = sortParticipantList();
+            let sortedParticipants = sortParticipantList(lineCount);
+            setParticipants(sortedParticipants);
+
             let initialHeap = buildHeap(sortedParticipants);
             setHeap(initialHeap);
             setIsTournamentStarted(true);
@@ -218,117 +174,79 @@ const Tournament = () => {
     }, [heap]);
 
     return (
-        <DndProvider backend={HTML5Backend}>
-            <div>
-                {/* Titre de l'app */}
-                <h1>Tournament Bracket</h1>
+        <>
+            {!isTournamentStarted && (
+                <div className="tournament-container">
+                    <div className="init-tournament-container">
+                        <ButtonsContainer
+                            participantNames={participantNames}
+                            onClick={randomizeParticipants}
+                            disabled={isAnimating}
+                            onClick1={deleteAllParticipants}
+                        />
 
-                {/* Composant paragraphe description de l'app */}
-                <div className="description-container">
-                    <h2>Description du Tournoi</h2>
-                    <p>Bienvenue sur notre plateforme de tournoi. Ajoutez des participants, organisez les matchs et
-                        suivez le déroulement en temps réel.</p>
-                    <p>Commencez par ajouter les participants ci-dessous, puis lancez le tournoi pour voir le bracket se
-                        générer automatiquement.</p>
-                </div>
+                        <div className="participants-container">
 
-                {!isTournamentStarted && (
-                    <div>
-                        <div className="init-tournament-container">
-                            <div className="buttons-container">
-                                <div className="participants-count">
-                                    <p>Nombre de participants : {participantNames.length}</p>
-                                </div>
+                            <ParticipantList
+                                participantNames={participantNames}
+                                moveParticipant={moveParticipant}
+                                deleteParticipant={deleteParticipant}
+                                renameParticipant={renameParticipant}
+                            />
 
-                                <button className="button" onClick={randomizeParticipants} disabled={isAnimating}>
-                                    Randomiser l'ordre des participants
-                                </button>
-
-                                <button className="button" onClick={deleteAllParticipants} disabled={isAnimating}>
-                                    Supprimer tous les participants
+                            <div className="add-participant-container">
+                                <input
+                                    type="text"
+                                    value={currentParticipantName}
+                                    onChange={(e) => setCurrentParticipantName(e.target.value)}
+                                    onKeyUp={(e) => {
+                                        return e.key === 'Enter' && increaseParticipantCount();
+                                    }}
+                                    placeholder="Entrez le nom de l'équipe"
+                                />
+                                <button className="add-participant-btn" onClick={increaseParticipantCount}
+                                        disabled={isAnimating}> +
                                 </button>
                             </div>
-
-                            <div className="participants-container">
-                                {/*<div className="scrollable">*/}
-                                <AnimatePresence>
-                                    <motion.ul layout>
-                                        {participantNames.map((name, index) => (
-                                            <ParticipantItem
-                                                key={name}
-                                                index={index}
-                                                name={name}
-                                                moveParticipant={moveParticipant}
-                                                deleteParticipant={deleteParticipant}
-                                                renameParticipant={renameParticipant}
-
-                                            />
-                                        ))}
-                                    </motion.ul>
-                                </AnimatePresence>
-                                {/*</div>*/}
-
-                                {/*<button>Tout afficher </button>*/}
-
-                                <div className="add-participant-container">
-                                    <input
-                                        type="text"
-                                        value={currentParticipantName}
-                                        onChange={(e) => setCurrentParticipantName(e.target.value)}
-                                        onKeyUp={(e) => e.key === 'Enter' && increaseParticipantCount()}
-                                        placeholder="Entrez le nom de l'équipe"
-                                    />
-                                    <button className="add-participant-btn" onClick={increaseParticipantCount}
-                                            disabled={isAnimating}>
-                                        +
-                                    </button>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div className="start-button-container">
-                            <button className="button sticky-btn" onClick={startTournament} disabled={isAnimating}>
-                                Démarrer le tournoi
-                            </button>
                         </div>
                     </div>
-                )}
 
-                {isTournamentStarted && (
-                    <>
-                        <div>
-                            <ColumnGenerator
-                                heap={heap}
-                                participantNames={participantNames}
-                                restartTournament={restartTournament}
-                                resetTournament={resetTournament}
-                                cancelTournament={cancelTournament}
-                                onWin={onWin}
-                            />
-                        </div>
+                    <StartButton startTournament={startTournament} isAnimating={isAnimating}/>
+                </div>
+            )}
 
-                        {isTournamentStarted && !isTournamentOver && (
-                            <button className="button" onClick={undoAction}>
-                                Annuler la dernière action
-                            </button>
-                        )}
-                    </>
-                )}
+            {isTournamentStarted && (
+                <div>
+                    <ColumnGenerator
+                        heap={heap}
+                        participantNames={participantNames}
+                        restartTournament={restartTournament}
+                        resetTournament={resetTournament}
+                        cancelTournament={cancelTournament}
+                        onWin={onWin}
+                    />
 
-                <ToastContainer
-                    position="bottom-right"
-                    autoClose={4000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme="dark"
-                />
-            </div>
-        </DndProvider>
+                    {!isTournamentOver && (
+                        <button className="button" onClick={undoAction}>
+                            Annuler la dernière action
+                        </button>
+                    )}
+                </div>
+            )}
+
+            <ToastContainer
+                position="bottom-right"
+                autoClose={4000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
+        </>
     );
 };
 

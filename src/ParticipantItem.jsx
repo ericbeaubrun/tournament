@@ -1,6 +1,8 @@
 import {useRef, useState} from 'react';
 import {useDrag, useDrop} from 'react-dnd';
 import {motion} from "framer-motion";
+import draggableIcon from '/src/assets/draggable.svg';
+
 
 const ParticipantItem = ({name, index, moveParticipant, deleteParticipant, renameParticipant}) => {
     const ref = useRef(null);
@@ -10,32 +12,25 @@ const ParticipantItem = ({name, index, moveParticipant, deleteParticipant, renam
     const [, drop] = useDrop({
         accept: 'PARTICIPANT',
         hover(item, monitor) {
-            if (!ref.current) {
-                return;
+            if (ref.current) {
+                const dragIndex = item.index;
+                const hoverIndex = index;
+
+                if (dragIndex !== hoverIndex) {
+                    const hoverBoundingRect = ref.current.getBoundingClientRect();
+                    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+                    const clientOffset = monitor.getClientOffset();
+                    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+                    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+                        return;
+                    }
+                    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+                        return;
+                    }
+                    moveParticipant(dragIndex, hoverIndex);
+                    item.index = hoverIndex;
+                }
             }
-            const dragIndex = item.index;
-            const hoverIndex = index;
-
-            if (dragIndex === hoverIndex) {
-                return;
-            }
-
-            const hoverBoundingRect = ref.current.getBoundingClientRect();
-            const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-            const clientOffset = monitor.getClientOffset();
-            const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-
-            if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-                return;
-            }
-
-            if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-                return;
-            }
-
-            moveParticipant(dragIndex, hoverIndex);
-
-            item.index = hoverIndex;
         },
     });
 
@@ -60,7 +55,7 @@ const ParticipantItem = ({name, index, moveParticipant, deleteParticipant, renam
         <motion.li
             ref={ref}
             className="item-container"
-            // style={{opacity: isDragging ? 0.5 : 1, cursor: 'move'}}
+            style={{opacity: isDragging ? 0.5 : 1, cursor: 'move'}}
             layout
             initial={{opacity: 0, y: -15}}
             animate={{opacity: 1, y: 0}}
@@ -69,7 +64,7 @@ const ParticipantItem = ({name, index, moveParticipant, deleteParticipant, renam
             onDoubleClick={() => setIsRenaming(true)}
         >
             <img
-                src={"src/assets/draggable.svg"}
+                src={draggableIcon}
                 href="draggable"
                 className="draggable-icon"
                 style={{opacity: isDragging ? 0.5 : 1, cursor: 'move'}}
@@ -92,13 +87,8 @@ const ParticipantItem = ({name, index, moveParticipant, deleteParticipant, renam
                 <span className="participant-name">{name}</span>
             )}
             <div className="manage-participants-container">
-                <button className="rename-button" onClick={handleRename}>
-                    ✏️
-                </button>
-                <button className="delete-button" onClick={() => deleteParticipant(index)}>
-                    🗑️
-                    {/*&minus;*/}
-                </button>
+                <button className="rename-button" onClick={handleRename}>✏️</button>
+                <button className="delete-button" onClick={() => deleteParticipant(index)}>🗑️</button>
             </div>
         </motion.li>
     );
