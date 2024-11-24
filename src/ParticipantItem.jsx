@@ -1,9 +1,11 @@
-import { useRef } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
+import {useRef, useState} from 'react';
+import {useDrag, useDrop} from 'react-dnd';
 import {motion} from "framer-motion";
 
-const ParticipantItem = ({ name, index, moveParticipant, deleteParticipant }) => {
+const ParticipantItem = ({name, index, moveParticipant, deleteParticipant, renameParticipant}) => {
     const ref = useRef(null);
+    const [isRenaming, setIsRenaming] = useState(false);
+    const [newName, setNewName] = useState(name);
 
     const [, drop] = useDrop({
         accept: 'PARTICIPANT',
@@ -14,12 +16,10 @@ const ParticipantItem = ({ name, index, moveParticipant, deleteParticipant }) =>
             const dragIndex = item.index;
             const hoverIndex = index;
 
-            // Ne rien faire si l'élément est au même endroit
             if (dragIndex === hoverIndex) {
                 return;
             }
 
-            // Déterminer la taille de l'élément
             const hoverBoundingRect = ref.current.getBoundingClientRect();
             const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
             const clientOffset = monitor.getClientOffset();
@@ -39,9 +39,9 @@ const ParticipantItem = ({ name, index, moveParticipant, deleteParticipant }) =>
         },
     });
 
-    const [{ isDragging }, drag] = useDrag({
+    const [{isDragging}, drag] = useDrag({
         type: 'PARTICIPANT',
-        item: { index },
+        item: {index},
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
@@ -49,21 +49,57 @@ const ParticipantItem = ({ name, index, moveParticipant, deleteParticipant }) =>
 
     drag(drop(ref));
 
+    const handleRename = () => {
+        if (isRenaming && newName.trim() !== name) {
+            renameParticipant(index, newName.trim());
+        }
+        setIsRenaming(!isRenaming);
+    };
+
     return (
         <motion.li
             ref={ref}
             className="item-container"
-            style={{ opacity: isDragging ? 0.5 : 1, cursor: 'move' }}
+            // style={{opacity: isDragging ? 0.5 : 1, cursor: 'move'}}
             layout
-            initial={{ opacity: 0, y: -15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 15 }}
-            transition={{ duration: 0.3 }}
+            initial={{opacity: 0, y: -15}}
+            animate={{opacity: 1, y: 0}}
+            exit={{opacity: 0, y: 15}}
+            transition={{duration: 0.3}}
+            onDoubleClick={() => setIsRenaming(true)}
         >
-            {name}
-            <button className="delete-button" onClick={() => deleteParticipant(index)}>
-                Delete
-            </button>
+            <img
+                src={"src/assets/draggable.svg"}
+                href="draggable"
+                className="draggable-icon"
+                style={{opacity: isDragging ? 0.5 : 1, cursor: 'move'}}
+            />
+
+            {isRenaming ? (
+                <input
+                    type="text"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    onBlur={handleRename}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleRename();
+                        if (e.key === 'Escape') setIsRenaming(false);
+                    }}
+                    className="rename-input"
+                    autoFocus
+                />
+            ) : (
+                <span className="participant-name">{name}</span>
+            )}
+            <div className="manage-participants-container">
+                <button className="rename-button" onClick={handleRename}>
+                    ✏️
+                </button>
+                <button className="delete-button" onClick={() => deleteParticipant(index)}>
+                    🗑️
+                    {/*&minus;*/}
+                </button>
+            </div>
         </motion.li>
     );
 };

@@ -1,5 +1,5 @@
-
-import "./Global.scss";
+import "./App.scss";
+import './Tournament.scss';
 import ColumnGenerator from "./ColumnGenerator.jsx";
 import {useState, useEffect} from "react";
 import {EXEMPT, EMPTY, PARTICIPANTS_ANIMATION_DURATION} from "./config.js";
@@ -15,11 +15,11 @@ const Tournament = () => {
     const [heap, setHeap] = useState([]);
     const [heapHistory, setHeapHistory] = useState([]);
     const [currentParticipantName, setCurrentParticipantName] = useState("");
-    const [participantNames, setparticipantNames] = useState([]);
+    const [participantNames, setParticipantNames] = useState([]);
     const [isTournamentStarted, setIsTournamentStarted] = useState(false);
     const [isTournamentOver, setIsTournamentOver] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
-    const [, setparticipants] = useState([]);
+    const [, setParticipants] = useState([]);
 
     const shuffleArray = (array) => {
         const newArray = [...array];
@@ -32,14 +32,12 @@ const Tournament = () => {
 
     const randomizeParticipants = () => {
         if (participantNames.length > 1) {
-
-            // Timeout pour eviter les conflits de ressources solicitées par plusieurs boutons
             setIsAnimating(true);
             setTimeout(() => {
                 setIsAnimating(false);
             }, PARTICIPANTS_ANIMATION_DURATION);
 
-            setparticipantNames((prevNames) => {
+            setParticipantNames((prevNames) => {
                 const shuffledNames = shuffleArray(prevNames);
                 return shuffledNames;
             });
@@ -49,24 +47,27 @@ const Tournament = () => {
             toast.error("Ajoutez au moins deux participants pour randomiser l'ordre.");
         }
     };
+
     const increaseParticipantCount = () => {
-        if (currentParticipantName !== "") {
+        if (currentParticipantName === "") {
+            toast.error("Le nom du participant ne peut pas être vide.");
+        } else if (participantNames.includes(currentParticipantName)) {
+            toast.error("Ce participant existe déjà dans le tournoi.");
+        } else {
             setLineCount((prevLineCount) => {
                 const nextLineCount = prevLineCount + 1;
                 const nextPowerOf2 = Math.pow(2, Math.ceil(Math.log2(nextLineCount)));
                 return nextLineCount <= nextPowerOf2 ? nextLineCount : prevLineCount;
             });
 
-            setparticipantNames((prevNames) => [...prevNames, currentParticipantName]);
+            setParticipantNames((prevNames) => [...prevNames, currentParticipantName]);
             toast.success(`Participant "${currentParticipantName}" ajouté avec succès.`);
             setCurrentParticipantName("");
-        } else {
-            toast.error("Le nom du participant ne peut pas être vide.");
         }
     };
 
     const deleteParticipant = (index) => {
-        setparticipantNames((prevNames) => {
+        setParticipantNames((prevNames) => {
             const updatedNames = [...prevNames];
             const removedName = updatedNames.splice(index, 1)[0];
             toast.info(`Participant "${removedName}" supprimé.`);
@@ -75,8 +76,25 @@ const Tournament = () => {
         setLineCount((prevCount) => prevCount - 1);
     };
 
+    const renameParticipant = (index, newName) => {
+        setParticipantNames((prevNames) => {
+            if (prevNames.includes(newName)) {
+                toast.error(`Le nom "${newName}" existe déjà.`);
+                return prevNames;
+            }
+
+            const updatedNames = [...prevNames];
+            const oldName = updatedNames[index];
+            updatedNames[index] = newName;
+
+            toast.success(`Participant "${oldName}" a été renommé en "${newName}".`);
+            return updatedNames;
+        });
+    };
+
+
     const moveParticipant = (fromIndex, toIndex) => {
-        setparticipantNames((prevNames) => {
+        setParticipantNames((prevNames) => {
             const updatedNames = [...prevNames];
             const [movedItem] = updatedNames.splice(fromIndex, 1);
             updatedNames.splice(toIndex, 0, movedItem);
@@ -84,9 +102,8 @@ const Tournament = () => {
         });
     };
 
-
     const deleteAllParticipants = () => {
-        setparticipantNames([]);
+        setParticipantNames([]);
         setLineCount(0);
         toast.info("Tous les participants ont été supprimés.");
     };
@@ -106,7 +123,7 @@ const Tournament = () => {
             }
         }
 
-        setparticipants(tmpParticipants);
+        setParticipants(tmpParticipants);
         return tmpParticipants;
     };
 
@@ -134,27 +151,29 @@ const Tournament = () => {
         return tree;
     };
 
-
+    // Fix le bug
     const cancelTournament = () => {
         setIsTournamentStarted(false);
+        setIsTournamentOver(false)
         toast.info("Le tournoi a été annulé.");
+        console.log(participantNames);
+        console.log(heap);
     };
 
     const resetTournament = () => {
         setIsTournamentStarted(false);
-        setparticipants([]);
-        setparticipantNames([]);
+        setParticipants([]);
+        setParticipantNames([]);
         setLineCount(0);
         setIsTournamentOver(false);
         toast.info("Le tournoi a été réinitialisé.");
     };
 
     const restartTournament = () => {
-        setparticipants([]);
+        setParticipants([]);
         setIsTournamentOver(false);
-        startTournament()
+        startTournament();
     };
-
 
     const startTournament = () => {
         if (lineCount > 1) {
@@ -201,46 +220,77 @@ const Tournament = () => {
     return (
         <DndProvider backend={HTML5Backend}>
             <div>
+                {/* Titre de l'app */}
                 <h1>Tournament Bracket</h1>
+
+                {/* Composant paragraphe description de l'app */}
+                <div className="description-container">
+                    <h2>Description du Tournoi</h2>
+                    <p>Bienvenue sur notre plateforme de tournoi. Ajoutez des participants, organisez les matchs et
+                        suivez le déroulement en temps réel.</p>
+                    <p>Commencez par ajouter les participants ci-dessous, puis lancez le tournoi pour voir le bracket se
+                        générer automatiquement.</p>
+                </div>
 
                 {!isTournamentStarted && (
                     <div>
-                        <input
-                            type="text"
-                            value={currentParticipantName}
-                            onChange={(e) => setCurrentParticipantName(e.target.value)}
-                            onKeyUp={(e) => e.key === 'Enter' && increaseParticipantCount()}
-                            placeholder="Entrez le nom de l'équipe"
-                        />
+                        <div className="init-tournament-container">
+                            <div className="buttons-container">
+                                <div className="participants-count">
+                                    <p>Nombre de participants : {participantNames.length}</p>
+                                </div>
 
-                        <button onClick={increaseParticipantCount} disabled={isAnimating}>
-                            Ajouter un participant
-                        </button>
+                                <button className="button" onClick={randomizeParticipants} disabled={isAnimating}>
+                                    Randomiser l'ordre des participants
+                                </button>
 
-                        <button onClick={randomizeParticipants} disabled={isAnimating}>
-                            Randomiser l&apos;ordre des participants
-                        </button>
+                                <button className="button" onClick={deleteAllParticipants} disabled={isAnimating}>
+                                    Supprimer tous les participants
+                                </button>
+                            </div>
 
-                        <button onClick={deleteAllParticipants} disabled={isAnimating}>
-                            Supprimer tous les participants
-                        </button>
+                            <div className="participants-container">
+                                {/*<div className="scrollable">*/}
+                                <AnimatePresence>
+                                    <motion.ul layout>
+                                        {participantNames.map((name, index) => (
+                                            <ParticipantItem
+                                                key={name}
+                                                index={index}
+                                                name={name}
+                                                moveParticipant={moveParticipant}
+                                                deleteParticipant={deleteParticipant}
+                                                renameParticipant={renameParticipant}
 
-                        <h2>Liste des participants</h2>
-                        <AnimatePresence>
-                            <motion.ul layout>
-                                {participantNames.map((name, index) => (
-                                    <ParticipantItem
-                                        key={name}
-                                        index={index}
-                                        name={name}
-                                        moveParticipant={moveParticipant}
-                                        deleteParticipant={deleteParticipant}
+                                            />
+                                        ))}
+                                    </motion.ul>
+                                </AnimatePresence>
+                                {/*</div>*/}
+
+                                {/*<button>Tout afficher </button>*/}
+
+                                <div className="add-participant-container">
+                                    <input
+                                        type="text"
+                                        value={currentParticipantName}
+                                        onChange={(e) => setCurrentParticipantName(e.target.value)}
+                                        onKeyUp={(e) => e.key === 'Enter' && increaseParticipantCount()}
+                                        placeholder="Entrez le nom de l'équipe"
                                     />
-                                ))}
-                            </motion.ul>
-                        </AnimatePresence>
+                                    <button className="add-participant-btn" onClick={increaseParticipantCount}
+                                            disabled={isAnimating}>
+                                        +
+                                    </button>
+                                </div>
 
-                        <button onClick={startTournament} disabled={isAnimating}>Démarrer le tournoi</button>
+                            </div>
+                        </div>
+                        <div className="start-button-container">
+                            <button className="button sticky-btn" onClick={startTournament} disabled={isAnimating}>
+                                Démarrer le tournoi
+                            </button>
+                        </div>
                     </div>
                 )}
 
@@ -258,12 +308,25 @@ const Tournament = () => {
                         </div>
 
                         {isTournamentStarted && !isTournamentOver && (
-                            <button onClick={undoAction}>Annuler la dernière action</button>
+                            <button className="button" onClick={undoAction}>
+                                Annuler la dernière action
+                            </button>
                         )}
                     </>
                 )}
 
-                <ToastContainer/>
+                <ToastContainer
+                    position="bottom-right"
+                    autoClose={4000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="dark"
+                />
             </div>
         </DndProvider>
     );

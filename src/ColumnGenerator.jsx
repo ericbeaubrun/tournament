@@ -1,11 +1,10 @@
 import "./ColumnGenerator.scss";
-import "./Global.scss";
+import "./App.scss";
 import {EMPTY, EXEMPT} from "./config.js";
 import "./BracketTree.js";
 import {
     collecterNoeudsAvecFrereEmpty,
     collecterNoeudsEmpty,
-    collecterTousLesDescendants,
     findConfrontableAdresses
 } from "./BracketTree.js";
 
@@ -33,17 +32,19 @@ const ColumnGenerator = ({heap, participantNames, restartTournament, resetTourna
 
     const columns = generateColumns();
 
+
     return (
         <>
             <div className="columns-container">
                 {(() => {
                     const columnElements = [];
                     let i = 0;
+                    let j = 1;
+                    let offsetCount = 0;
 
                     for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
                         const column = columns[columnIndex];
                         const itemHeight = 50 * Math.pow(2, columnIndex);
-
                         const itemElements = [];
 
                         let valMin = heap.length - (i) - 1;
@@ -62,27 +63,27 @@ const ColumnGenerator = ({heap, participantNames, restartTournament, resetTourna
 
                             let cellClassName1;
 
-                            if (buttonsAddresses.includes(heapIndex)) {
+                            if (buttonsAddresses.includes(heapIndex)) { // Case confrontation possible
                                 cellClassName1 = `cell ${'confrontable-cell'}`;
                             } else if (emptyAddresses.includes(heapIndex)) {
-                                cellClassName1 = `cell ${'waiting-cell'}`;
+                                cellClassName1 = `cell ${'waiting-cell'}`; // Case vide disponible
                             } else if (aloneAddresses.includes(heapIndex)) {
-                                cellClassName1 = `cell ${'terminated-cell'}`;
+                                cellClassName1 = `cell ${'terminated-cell'}`; // Case en attente d'une autre equipe pour confrontation
                             }
 
-                            const displayText =
-                                item !== "" && item !== EXEMPT && item !== EMPTY
-                                    ? participantNames[item - 1]
-                                    : item;
+                            let displayText = item !== "" && item !== EXEMPT && item !== EMPTY
+                                ? participantNames[item - 1] : item;
+
+                            if (item === EXEMPT) displayText = "";
+
+
                             itemElements.push(
                                 <li key={itemIndex}
                                     className={"item-container " + cellClassName1 + " " + cellClassName2}
                                     style={{
-                                        height: `${itemHeight}px`,
-                                        borderTop: `#121212 solid ${itemHeight / 25}px`,
-                                        borderBottom : `#121212 solid ${itemHeight / 25}px`,
-                                        borderRight : `#121212 solid 10px`
-                                        // border: `#121212 solid ${itemHeight / 25}px`
+                                        height: `${itemHeight + offsetCount}px`,
+                                        border: `1px solid black`,
+                                        borderRight: `#121212 solid 1px`
                                     }}>
                                     <div className={cellClassName1}>
                                         {displayText}
@@ -102,12 +103,15 @@ const ColumnGenerator = ({heap, participantNames, restartTournament, resetTourna
                                 </li>
                             );
                             i++;
+
                         }
                         columnElements.push(
                             <ul key={columnIndex} className={`column column-${columnIndex + 1}`}>
                                 {itemElements}
                             </ul>
                         );
+                        j *= 2;
+                        offsetCount += j;
                     }
                     return columnElements;
                 })()}

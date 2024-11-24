@@ -1,0 +1,218 @@
+$background-color: #121212;
+$text-color: #e0e0e0;
+$accent-color: #bb86fc;
+$button-bg-color: #1f1f1f;
+$button-hover-bg-color: #333333;
+$input-border-color: #333333;
+
+.button {
+  background-color: $button-bg-color;
+  color: #ffffff;
+  border: 1px solid $input-border-color;
+  padding: 12px 24px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 4px;
+  margin: 8px 0;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: $button-hover-bg-color;
+  }
+
+  &:disabled {
+    background-color: darken($button-bg-color, 10%);
+    cursor: not-allowed;
+  }
+}
+
+input, textarea {
+  background-color: $button-bg-color;
+  color: #ffffff;
+  border: 1px solid $input-border-color;
+  padding: 12px;
+  border-radius: 4px;
+  margin: 8px 0;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.description-container {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 40px;
+  padding: 0 16px;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+}
+
+.init-tournament-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.buttons-container {
+  flex: 1;
+  min-width: 300px;
+  margin-right: 16px;
+
+  .participants-count {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .button {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+}
+
+
+.participants-container {
+  flex: 1;
+  min-width: 300px;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .item-container {
+    background-color: $button-bg-color;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: $button-hover-bg-color;
+    }
+
+    .delete-button {
+      background: transparent;
+      border: none;
+      color: $text-color;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0;
+      margin-left: 8px;
+
+      &:hover {
+        color: $accent-color;
+      }
+    }
+
+    .rename-button {
+      background: transparent;
+      border: none;
+      color: $text-color;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0;
+      margin-left: 8px;
+
+      &:hover {
+      }
+    }
+  }
+
+  .add-participant-container {
+    display: flex;
+    margin-top: 16px;
+
+    input {
+      flex: 1;
+      margin-right: 8px;
+    }
+
+    .add-participant-btn {
+      background-color: $accent-color;
+      color: #ffffff;
+      border: none;
+      padding: 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1.5rem;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &:hover {
+        background-color: darken($accent-color, 10%);
+      }
+
+      &:disabled {
+        background-color: darken($accent-color, 20%);
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+.start-button-container {
+  text-align: center;
+  margin-top: 24px;
+
+  .button {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .init-tournament-container {
+    flex-direction: column;
+  }
+
+  .buttons-container,
+  .participants-container {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 24px;
+  }
+}
+
+
+//TODO
+.scrollable {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.manage-participants-container {
+  //width: 15%;
+}
+
+.rename-input {
+  max-width: 50%;
+  text-align: center;
+}
+
+li.item-container {
+  cursor: pointer;
+}
+
+.draggable-icon {
+  height: 40px;
+  width: 40px;
+}

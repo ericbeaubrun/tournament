@@ -1,6 +1,7 @@
 .columns-container {
   display: flex;
   flex-direction: row;
+  padding: 0 2vw 0  2vw;
 
   .column {
     list-style-type: none;
@@ -8,15 +9,11 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-
-    background-color: #dee2e6;
-
+    //height: 100%;
+    background-color: transparent; // à retirer
   }
 
   .item-container {
-    //background-color: #ffffff;
-    //background-color: #3a3a3a;
-    //border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
@@ -24,11 +21,55 @@
     transition: background-color 0.3s ease;
 
     &:hover {
-      //background-color: #f1f1f1;
-      //background-color: #3f3f3f;
     }
   }
 }
 
+.column-generator .round {
+  margin-bottom: 20px;
+}
 
+.column-generator .round-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
 
+.column-generator .team {
+  background-color: #424242;
+  padding: 8px;
+  margin-bottom: 5px;
+  color: #e0e0e0;
+}
+
+.column-generator .team.selected {
+  background-color: #616161;
+}
+
+.column-generator .team:hover {
+  background-color: #757575;
+  cursor: pointer;
+}
+
+li.terminated-cell.red-cell {
+  background-color: darken(#8a3838, 2%);
+}
+
+li.waiting-cell.red-cell {
+  background-color: darken(#474780, 2%);
+}
+
+li.confrontable-cell.red-cell {
+  background-color: darken(#888842, 2%);
+}
+
+li.terminated-cell.blue-cell {
+  background-color: #8a3838;
+}
+
+li.waiting-cell.blue-cell {
+  background-color: #474780;
+}
+
+li.confrontable-cell.blue-cell {
+  background-color: #888842;
+  }

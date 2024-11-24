@@ -1,6 +1,6 @@
 body {
   background-color: #121212;
-  color: #FFFFFF;
+  //color: #FFFFFF;
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 20px;
@@ -8,7 +8,9 @@ body {
 
 h1 {
   text-align: center;
-  margin-bottom: 40px;
+  padding-bottom: 100px;
+  font-size: 3rem;
+  //color: white;
 }
 
 .item-container div {
@@ -22,9 +24,6 @@ body {
   font-family: Arial, sans-serif;
 }
 
-h1 {
-  color: #ffffff;
-}
 
 input[type="text"] {
   background-color: #1e1e1e;
@@ -69,16 +68,7 @@ li {
   align-items: center;
 }
 
-.delete-button {
-  background-color: #d32f2f;
-  color: #ffffff;
-  border: none;
-  padding: 5px 10px;
-}
 
-.delete-button:hover {
-  background-color: #b71c1c;
-}
 
 .next-button {
   background-color: #35b429;
@@ -136,68 +126,3 @@ li {
 .reset-button:hover {
   background-color: #b71c1c;
 }
-
-/* Styles spécifiques pour ColumnGenerator */
-.column-generator .round {
-  margin-bottom: 20px;
-}
-
-.column-generator .round-title {
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.column-generator .team {
-  background-color: #424242;
-  padding: 8px;
-  margin-bottom: 5px;
-  color: #e0e0e0;
-}
-
-.column-generator .team.selected {
-  background-color: #616161;
-}
-
-.column-generator .team:hover {
-  background-color: #757575;
-  cursor: pointer;
-}
-
-//.cell {
-//  position: relative;
-//}
-
-/* ColumnGenerator.scss ou Global.scss */
-
-//.cell {
-//}
-
-//li.item-container {
-//}
-
-li.terminated-cell.red-cell {
-  background-color: darken(#8a3838, 2%);
-}
-
-li.waiting-cell.red-cell {
-  background-color: darken(#474780, 2%);
-}
-
-li.confrontable-cell.red-cell {
-  background-color: darken(#888842, 2%);
-}
-
-li.terminated-cell.blue-cell {
-  background-color: #8a3838;
-}
-
-li.waiting-cell.blue-cell {
-  background-color: #474780;
-}
-
-li.confrontable-cell.blue-cell {
-  background-color: #888842;
-}
-
-
-
