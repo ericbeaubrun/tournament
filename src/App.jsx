@@ -1,17 +1,15 @@
-import Tournament from "./Tournament.jsx";
 import {HTML5Backend} from "react-dnd-html5-backend";
-import Description from "./Description.jsx";
 import {DndProvider} from "react-dnd";
+import HomePage from "./homepage/HomePage.jsx";
 
+
+// in your JSX
 const App = () => {
     return (
         <DndProvider backend={HTML5Backend}>
-            <h1>Tournament Bracket</h1>
-            <Description/>
-            <Tournament/>
+                <HomePage/>
         </DndProvider>
     );
 };
 
 export default App;
-

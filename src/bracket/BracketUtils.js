@@ -1,4 +1,4 @@
-import {EXEMPT, EMPTY} from "./config.js";
+import {EXEMPT, EMPTY} from "../config/config.js";
 
 export function calculateHight(heap) {
     return Math.floor(Math.log2(heap.length));

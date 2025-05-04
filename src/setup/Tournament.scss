@@ -1,0 +1,314 @@
+@import '../config/config.scss';
+
+// Conteneur principal du tournoi
+.tournament-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 16px;
+  border-radius: 12px;
+  background: rgba(24, 24, 24, 0.6);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+// Section de configuration du tournoi
+.tournament-setup {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  
+  @media (min-width: 992px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.tournament-controls-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  background: linear-gradient(145deg, #222222, #2a2a2a);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+// Conteneur d'entrée des participants
+.participant-input-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.participant-input {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: $default-text-color;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  font-family: $default-font-family;
+  
+  &:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+  }
+  
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+}.draggable-icon {
+   height: 40px;
+   width: 40px;
+ }
+
+
+// Bouton d'ajout de participant
+.add-participant-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 44px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background: linear-gradient(145deg, #3a3a3a, #444444);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: linear-gradient(145deg, #444444, #505050);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  &:active {
+    transform: translateY(1px);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #3a3a3a;
+  }
+}
+
+// Actions du tournoi
+.tournament-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0;
+  
+  button {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    &:active {
+      transform: translateY(1px);
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Compteur de participants
+.participant-counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  color: $default-text-color;
+}
+
+.participant-count {
+  min-width: 120px;
+  text-align: center;
+  font-family: $default-font-family;
+}
+
+.participant-count-number {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+// Boutons d'incrément et décrément
+.increment-btn,
+.decrement-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #2c2c2c, #383838);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: linear-gradient(145deg, #383838, #444444);
+  }
+}
+
+// Boutons d'action
+.clear-participants-btn,
+.shuffle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(145deg, #2c2c2c, #383838);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: linear-gradient(145deg, #383838, #444444);
+  }
+}
+
+// Bouton de démarrage du tournoi
+.start-tournament-container {
+  margin-top: 16px;
+}
+
+.start-tournament-btn {
+  width: 100%;
+  padding: 16px;
+  font-size: 1.1rem;
+  background: linear-gradient(145deg, #3a7bd5, #3a6bc7);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: $default-font-family;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  
+  &:hover {
+    background: linear-gradient(145deg, #3a6bc7, #2a5ab5);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  }
+  
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background: #666666;
+  }
+}
+
+.sticky-btn {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+
+// Liste des participants
+.participants-list-container {
+  height: 300px;
+  //max-height: 70vh;
+  overflow-y: auto;
+  padding: 16px;
+  background: linear-gradient(145deg, #222222, #2a2a2a);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+// Tournoi actif
+.active-tournament {
+  padding: 32px 16px;
+  background: rgba(24, 24, 24, 0.6);
+  backdrop-filter: blur(5px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  margin: 0 auto;
+  max-width: 1400px;
+}
+
+// Contrôles d'action du tournoi actif
+.tournament-action-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+  gap: 16px;
+}
+
+.button {
+  padding: 12px 24px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-family: $default-font-family;
+}
+
+.undo-button {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: normal;
+  font-size: 2rem;
+
+  background: linear-gradient(145deg, #424242, #4e4e4e);
+  color: white;
+
+  &:hover {
+    background: linear-gradient(145deg, #4e4e4e, #5a5a5a);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}

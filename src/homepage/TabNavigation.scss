@@ -1,0 +1,40 @@
+@import '../config/config.scss';
+
+.history-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tab-button {
+  font-family: $default-font-family;
+  background: transparent;
+  border: none;
+  color: $secondary-text-color;
+  padding: 10px 20px;
+  margin: 0 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.tab-button.active {
+  color: $default-text-color;
+}
+
+.tab-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #34cddb, #2e9dcc);
+  border-radius: 100%;
+}
+
+.tab-button:hover {
+  color: white;
+}

@@ -1,0 +1,151 @@
+@import '../config/config';
+
+
+.history-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  margin-bottom: 10px;
+  background-color: #262626;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.history-item-content {
+  display: flex;
+  flex-direction: column;
+  font-family: $default-font-family;
+
+}
+
+.history-item-participants {
+  color: $secondary-text-color;
+  font-family: $default-font-family;
+  margin-top: 5px;
+  font-size: 0.9rem;
+}
+
+.history-item-winner {
+  color: #43b2d0;
+  margin-top: 5px;
+  font-size: 0.9rem;
+}
+
+.saved-history-item {
+  border-left: 4px solid #f1c40f;
+  background-color: $default-background-color;
+}
+
+.history-saved-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: #f1c40f;
+  color: #2c3e50;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  margin-left: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  vertical-align: middle;
+}
+
+.history-saved-icon {
+  font-size: 1rem;
+  color: #e67e22;
+  margin-right: 3px;
+}
+
+.history-item-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Styles pour les boutons d'action */
+.reload-tournament-btn,
+.save-tournament-btn {
+  background-color: #415869;
+  color: $default-text-color;
+  font-family: $default-font-family;
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.reload-tournament-btn:hover {
+}
+
+.save-tournament-btn:hover {
+}
+
+.favorite-toggle-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 5px 10px;
+  color: #666;
+  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  margin-right: 8px;
+  position: relative;
+}
+
+.favorite-toggle-btn:hover {
+  color: #999;
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.favorite-toggle-btn:active {
+  transform: translateY(0);
+  transition: all 0.1s ease;
+}
+
+.favorite-toggle-btn.favorite-active {
+  color: #f1c40f;
+  background-color: rgba(241, 196, 15, 0.08);
+}
+
+.favorite-icon {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.favorite-toggle-btn:hover .favorite-icon {
+  transform: rotate(72deg);
+}
+
+.favorite-toggle-btn.favorite-active .favorite-icon {
+  transform: rotate(0);
+}
+
+.delete-tournament-btn {
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 5px 8px;
+  color: #666;
+  transition: all 0.2s ease;
+  margin-left: 5px;
+}
+
+.delete-tournament-btn:hover {
+  transform: scale(1.2);
+  color: #e74c3c;
+}
+
+.delete-icon {
+  display: inline-block;
+}

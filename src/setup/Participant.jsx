@@ -2,9 +2,9 @@ import {useRef, useState} from 'react';
 import {useDrag, useDrop} from 'react-dnd';
 import {motion} from "framer-motion";
 import draggableIcon from '/src/assets/draggable.svg';
+import './Participant.scss';
 
-
-const ParticipantItem = ({name, index, moveParticipant, deleteParticipant, renameParticipant}) => {
+const Participant = ({name, index, moveParticipant, deleteParticipant, renameParticipant}) => {
     const ref = useRef(null);
     const [isRenaming, setIsRenaming] = useState(false);
     const [newName, setNewName] = useState(name);
@@ -15,7 +15,6 @@ const ParticipantItem = ({name, index, moveParticipant, deleteParticipant, renam
             if (ref.current) {
                 const dragIndex = item.index;
                 const hoverIndex = index;
-
                 if (dragIndex !== hoverIndex) {
                     const hoverBoundingRect = ref.current.getBoundingClientRect();
                     const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
@@ -54,8 +53,8 @@ const ParticipantItem = ({name, index, moveParticipant, deleteParticipant, renam
     return (
         <motion.li
             ref={ref}
-            className="item-container"
-            style={{opacity: isDragging ? 0.5 : 1, cursor: 'move'}}
+            className={`item-container2 ${isDragging ? 'dragging' : ''}`}
+            style={{cursor: 'move'}}
             layout
             initial={{opacity: 0, y: -15}}
             animate={{opacity: 1, y: 0}}
@@ -69,7 +68,6 @@ const ParticipantItem = ({name, index, moveParticipant, deleteParticipant, renam
                 className="draggable-icon"
                 style={{opacity: isDragging ? 0.5 : 1, cursor: 'move'}}
             />
-
             {isRenaming ? (
                 <input
                     type="text"
@@ -84,7 +82,7 @@ const ParticipantItem = ({name, index, moveParticipant, deleteParticipant, renam
                     autoFocus
                 />
             ) : (
-                <span className="participant-name">{name}</span>
+                <span className="participant-name2">{name}</span>
             )}
             <div className="manage-participants-container">
                 <button className="rename-button" onClick={handleRename}>✏️</button>
@@ -94,4 +92,4 @@ const ParticipantItem = ({name, index, moveParticipant, deleteParticipant, renam
     );
 };
 
-export default ParticipantItem;
+export default Participant;
