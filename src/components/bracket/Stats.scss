@@ -1,0 +1,206 @@
+@import '../../config/config';
+
+/* Variables pixel art */
+$pixel-border-size: 2px;
+$pixel-border-color: #444;
+$pixel-bg-color: #1a1a1a;
+$pixel-header-bg: #252525;
+$pixel-row-bg: #222;
+$pixel-row-alt-bg: #1e1e1e;
+$pixel-winner-color: #554400;
+$pixel-shadow-color: #111;
+
+.tournament-stats-container {
+  color: white;
+  font-family: $default-font-family;
+  margin-top: 32px;
+  margin-bottom: 96px;
+  padding: 20px;
+  //width: 90%;
+  width: 88%;
+  //background-color: $pixel-bg-color;
+  //border: $pixel-border-size solid $pixel-border-color;
+  //border-bottom: $pixel-border-size + 2px solid darken($pixel-border-color, 10%);
+  //border-right: $pixel-border-size + 2px solid darken($pixel-border-color, 10%);
+  //box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.2);
+  //letter-spacing: 1px;
+
+  .stats-title {
+    text-align: center;
+    position: relative;
+    padding-bottom: 8px;
+
+    &:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: repeating-linear-gradient(to right, transparent, transparent 4px, #444 4px, #444 8px);
+    }
+  }
+
+  .tournament-winner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+    padding: 10px;
+    //background-color: rgba(85, 68, 0, 0.2);
+    //border: $pixel-border-size solid $pixel-winner-color;
+    //border-bottom: $pixel-border-size + 2px solid darken($pixel-winner-color, 10%);
+    //border-right: $pixel-border-size + 2px solid darken($pixel-winner-color, 10%);
+
+    border: $pixel-border-size solid $pixel-border-color;
+    border-bottom: $pixel-border-size + 2px solid darken($pixel-border-color, 10%);
+    border-right: $pixel-border-size + 2px solid darken($pixel-border-color, 10%);
+
+    .winner-trophy {
+      margin-bottom: 10px;
+
+      img {
+        filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.3));
+      }
+    }
+
+    .winner-name {
+      font-size: 1.2rem;
+      //font-weight: bold;
+      color: $win-color;
+      text-shadow: 2px 2px 0 #000;
+      text-transform: uppercase;
+    }
+  }
+
+  .stats-table-container {
+    overflow-x: auto;
+    border: $pixel-border-size solid $pixel-border-color;
+    border-bottom: $pixel-border-size + 2px solid darken($pixel-border-color, 10%);
+    border-right: $pixel-border-size + 2px solid darken($pixel-border-color, 10%);
+
+    .stats-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 0;
+      font-size: 18px;
+
+      td {
+        font-size: 1.2rem;
+      }
+
+      th, td {
+        font-size: 1.35rem;
+        font-weight: 500;
+        text-align: center;
+        padding: 12px 10px;
+        border: $pixel-border-size solid $pixel-border-color;
+      }
+
+      th {
+        position: sticky;
+        top: 0;
+        background-color: $pixel-header-bg;
+        color: #e5e5e5;
+        text-transform: uppercase;
+        border-bottom: $pixel-border-size + 2px solid darken($pixel-border-color, 10%);
+      }
+
+      tr {
+        background-color: $pixel-row-bg;
+
+        &:nth-child(even) {
+          background-color: $pixel-row-alt-bg;
+        }
+
+        //&:hover {
+        //  background-color: lighten($pixel-row-bg, 5%);
+        //}
+      }
+
+      .player-name {
+        text-align: left;
+        //font-weight: bold;
+      }
+
+      .wins-column {
+        color: $win-color;
+      }
+
+      .losses-column {
+        color: $lose-color;
+      }
+
+      .win-rate-column {
+        //font-weight: bold;
+      }
+
+      .winner-row {
+        background-color: rgba(255, 215, 0, 0.1);
+
+        td {
+          //border-left: 2px solid $pixel-winner-color;
+          //border-right: 2px solid $pixel-winner-color;
+
+          &:first-child {
+            //border-left: 4px solid $pixel-winner-color;
+          }
+
+          &:last-child {
+            //border-right: 4px solid $pixel-winner-color;
+          }
+        }
+      }
+
+      .winner-indicator {
+        display: inline-block;
+        margin-right: 8px;
+        font-size: 1.3rem;
+        color: $win-color;
+        background-color: $pixel-winner-color;
+        padding: 0 4px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .tournament-stats-container {
+    padding: 15px;
+    width: 95%;
+    border-width: $pixel-border-size;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+
+    .stats-title {
+      font-size: 1.5rem;
+    }
+
+    .tournament-winner {
+      .winner-name {
+        font-size: 22px;
+      }
+    }
+
+    .stats-table-container {
+      .stats-table {
+        font-size: 14px;
+
+        th {
+          font-size: 14px;
+          padding: 10px 8px;
+        }
+
+        td {
+          padding: 8px 10px;
+        }
+
+        .winner-indicator {
+          font-size: 12px;
+          padding: 0 2px;
+        }
+      }
+    }
+  }
+}

@@ -1,18 +1,12 @@
 import "./BracketGenerator.scss";
-import "../App.scss";
-import {useState, useCallback, useMemo} from "react";
-import {DISPLAY_EMPTY, EMPTY, EXEMPT} from "../config/config.js";
-import {
-    collectNodesWithEmptyNear,
-    collectEmptyNodes,
-    findConfrontableAdresses
-} from "./BracketUtils.js";
+import "../../App.scss";
+import {useCallback, useMemo, useState} from "react";
+import {DISPLAY_EMPTY, EMPTY, EXEMPT} from "../../config/config.js";
+import {collectEmptyNodes, collectNodesWithEmptyNear, findConfrontableAdresses} from "../../utils/BracketUtils.js";
 import Stats from "./Stats.jsx";
+import {TournamentControls} from "./TournamentControls.jsx";
+import {downloadJSON} from "../../utils/fileUtils.js";
 
-/**
- * Composant qui génère et affiche un arbre de tournoi (bracket)
- * Permet de visualiser et interagir avec l'état actuel du tournoi
- */
 const BracketGenerator = ({
                               heap,
                               participantNames,
@@ -21,24 +15,22 @@ const BracketGenerator = ({
                               cancelTournament,
                               onWin,
                               renameParticipant,
-                              saveTournament
+                              saveTournament,
+                              undoAction,
+                              setHeapHistory,
+                              updateLastTournament,
                           }) => {
-    // États pour l'édition des noms de participants
+
+    const tab = {2: '-200px', 3: '-100px', 4: '-60px', 5: '-45px', 6: '-40px'}
+
+
     const [editingCells, setEditingCells] = useState({});
     const [editValues, setEditValues] = useState({});
-
-    // Calcul des adresses pour les différents états des cellules
     const buttonsAddresses = useMemo(() => findConfrontableAdresses(heap), [heap]);
     const aloneAddresses = useMemo(() => collectNodesWithEmptyNear(heap), [heap]);
     const emptyAddresses = useMemo(() => collectEmptyNodes(heap), [heap]);
     const isTournamentOver = heap[0] !== EMPTY;
-    // const isTournamentOver = buttonsAddresses.length === 0; possible aussi
 
-    // console.log("BracketGenerator :")
-    // console.log(heap)
-
-
-    // Génération des colonnes du bracket
     const generateColumns = useCallback(() => {
         const columns = [];
         let levelStartIndex = 0;
@@ -54,10 +46,8 @@ const BracketGenerator = ({
         return columns;
     }, [heap]);
 
-    // Mémorisation des colonnes pour éviter des re-calculs inutiles
     const columns = useMemo(() => generateColumns(), [generateColumns]);
 
-    // Gérer le double-clic pour éditer un nom de participant
     const handleDoubleClick = useCallback((heapIndex, item) => {
         if (item !== EMPTY && item !== EXEMPT && item !== "") {
             setEditingCells(prev => ({...prev, [heapIndex]: true}));
@@ -68,15 +58,27 @@ const BracketGenerator = ({
         }
     }, [participantNames]);
 
-    // Confirmer le changement de nom
     const handleConfirmEdit = useCallback((heapIndex, item) => {
         if (renameParticipant && editValues[heapIndex] !== undefined) {
-            renameParticipant(item - 1, editValues[heapIndex]);
+            const newName = editValues[heapIndex];
+            renameParticipant(item - 1, newName);
+
+            // Mettre à jour la liste des participants avec le nouveau nom
+            const updatedParticipantNames = [...participantNames];
+            updatedParticipantNames[item - 1] = newName;
+
+            // Mise à jour du tournoi dans l'historique lors du renommage
+            const newHeap = [...heap];
+            setHeapHistory((prevHistory) => {
+                const newHistory = [...prevHistory, newHeap];
+                // Envoyer la liste mise à jour des participants à updateLastTournament
+                updateLastTournament(newHeap, newHistory, updatedParticipantNames);
+                return newHistory;
+            });
         }
         setEditingCells(prev => ({...prev, [heapIndex]: false}));
-    }, [renameParticipant, editValues]);
+    }, [renameParticipant, editValues, heap, setHeapHistory, updateLastTournament, participantNames]);
 
-    // Gérer les changements dans le champ d'édition
     const handleEditChange = useCallback((heapIndex, value) => {
         setEditValues(prev => ({
             ...prev,
@@ -84,16 +86,14 @@ const BracketGenerator = ({
         }));
     }, []);
 
-    // Gérer la touche "Entrée" lors de l'édition
     const handleKeyUp = useCallback((e, heapIndex, item) => {
         if (e.key === "Enter") {
             handleConfirmEdit(heapIndex, item);
         }
     }, [handleConfirmEdit]);
 
-    // Fonction pour créer une cellule du bracket
+
     const renderCell = useCallback((item, itemIndex, columnIndex, heapIndex, adrPere, stateClass, colorPositionClass, itemHeight, offsetCount) => {
-        // Déterminer le texte à afficher
         let displayText = "";
         if (item !== "" && item !== EXEMPT && item !== EMPTY) {
             displayText = participantNames[item - 1];
@@ -107,8 +107,8 @@ const BracketGenerator = ({
                 className={`bracket-cell ${stateClass} ${colorPositionClass}`}
                 style={{
                     height: `${itemHeight + offsetCount}px`,
-                    border: "1px solid black",
-                    borderRight: "#121212 solid 1px",
+                    // border: "1px solid black",
+                    // borderRight: "#121212 solid 1px",
                 }}
                 onDoubleClick={() => handleDoubleClick(heapIndex, item)}
             >
@@ -131,15 +131,13 @@ const BracketGenerator = ({
                         {buttonsAddresses.includes(heapIndex) && (
                             <button
                                 className="win-button"
+                                style={{transform: `translate(${tab[columns.length > 6 ? 6 : columns.length]},7px)`,}}
                                 onClick={(e) => {
-                                    // Empêcher la propagation et l'action par défaut
                                     e.stopPropagation();
                                     e.preventDefault();
-                                    // Ajout d'un délai minimal pour éviter des problèmes de timing
                                     setTimeout(() => {
                                         if (adrPere >= 0) {
                                             onWin(heapIndex, adrPere);
-                                            // console.log(heap);
                                         }
                                     }, 10);
                                 }}
@@ -147,7 +145,7 @@ const BracketGenerator = ({
                                 onMouseUp={(e) => e.stopPropagation()}
                                 title="Marquer comme gagnant"
                             >
-                                ➤
+                                &#10140;
                             </button>
                         )}
                     </div>
@@ -156,12 +154,11 @@ const BracketGenerator = ({
         );
     }, [buttonsAddresses, editingCells, editValues, handleConfirmEdit, handleDoubleClick, handleEditChange, handleKeyUp, onWin, participantNames]);
 
-    // Rendu des colonnes du bracket
     const renderColumns = useCallback(() => {
         const columnElements = [];
         let i = 0;
         let j = 1;
-        let offsetCount = 0;
+        let offset = 0;
 
         for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
             const column = columns[columnIndex];
@@ -178,13 +175,11 @@ const BracketGenerator = ({
                 const groupIndex = Math.floor(itemIndex / 2);
                 const isRed = columnIndex % 2 === 0 ? groupIndex % 2 !== 0 : groupIndex % 2 === 0;
 
-                // Classes CSS pour la position et la couleur des cellules
                 let colorPositionClass = `color-${isRed ? 'red' : 'blue'}`;
                 colorPositionClass += itemIndex % 2 ? " odd" : " even";
                 if (columnIndex === columns.length - 1) colorPositionClass += " column-last";
                 if (columnIndex === 0) colorPositionClass += " column-first";
 
-                // Déterminer l'état de la cellule
                 let stateClass = "";
                 if (buttonsAddresses.includes(heapIndex)) {
                     stateClass = `state-confrontable`;
@@ -194,16 +189,23 @@ const BracketGenerator = ({
                     stateClass = `state-terminated`;
                 }
 
-                // Ajouter la cellule à la liste des éléments
                 itemElements.push(
-                    renderCell(item, itemIndex, columnIndex, heapIndex, adrPere,
-                        stateClass, colorPositionClass, itemHeight, offsetCount)
+                    renderCell(
+                        item,
+                        itemIndex,
+                        columnIndex,
+                        heapIndex,
+                        adrPere,
+                        stateClass,
+                        colorPositionClass,
+                        itemHeight,
+                        0 //à rafiner
+                    )
                 );
 
                 i++;
             }
 
-            // Ajouter la colonne au tableau des colonnes
             columnElements.push(
                 <ul key={columnIndex} className={`bracket-column bracket-column-${columnIndex + 1}`}>
                     {itemElements}
@@ -211,91 +213,42 @@ const BracketGenerator = ({
             );
 
             j *= 2;
-            offsetCount += j;
+            offset += j;
         }
 
         return columnElements;
     }, [columns, heap, buttonsAddresses, emptyAddresses, aloneAddresses, renderCell]);
 
-    // Fonction pour exporter le tournoi actuel directement sans passer par saveTournament
     const exportTournamentData = useCallback(() => {
-        try {
-            const tournamentData = {
-                heap,
-                participants: participantNames,
-                date: new Date().toISOString(),
-                status: isTournamentOver ? "terminé" : "en cours"
-            };
+        const tournamentData = {
+            heap,
+            participants: participantNames,
+            date: new Date().toISOString(),
+            status: isTournamentOver ? "terminé" : "en cours"
+        };
 
-            const filename = `tournoi_${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
-            const tournamentBlob = new Blob([JSON.stringify(tournamentData, null, 2)], {type: "application/json"});
-            const downloadLink = document.createElement("a");
-
-            downloadLink.href = URL.createObjectURL(tournamentBlob);
-            downloadLink.download = filename;
-
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-
-            setTimeout(() => URL.revokeObjectURL(downloadLink.href), 100);
-
-            // Notification de succès (si toast disponible)
-            if (window.toast) {
-                window.toast.success(`Tournoi exporté avec succès sous le nom : ${filename}`);
-            } else {
-                alert(`Tournoi exporté avec succès sous le nom : ${filename}`);
-            }
-        } catch (error) {
-            console.error("Erreur lors de l'exportation du tournoi:", error);
-            if (window.toast) {
-                window.toast.error(`Erreur lors de l'exportation: ${error.message}`);
-            } else {
-                alert(`Erreur lors de l'exportation: ${error.message}`);
-            }
-        }
+        const filename = `tournoi_${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+        downloadJSON(tournamentData, filename);
     }, [heap, participantNames, isTournamentOver]);
 
     return (
         <>
+            <TournamentControls
+                tournamentOver={isTournamentOver}
+                onCancel={cancelTournament}
+                onReset={resetTournament}
+                onRestart={restartTournament}
+                onSave={saveTournament}
+                onExport={exportTournamentData}
+                onUndo={undoAction}
+            />
+
             <div className="bracket-columns">
                 {renderColumns()}
             </div>
 
-            <div className="tournament-controls">
-                {isTournamentOver ? (
-                    <div className="tournament-over-buttons">
-                        <button className="button cancel-button" onClick={cancelTournament}>Retour</button>
-                        <button className="button reset-button" onClick={resetTournament}>Nouveau</button>
-                        <button className="button restart-button" onClick={restartTournament}>Relancer</button>
-                        <button className="button save-button" onClick={saveTournament}>
-                            Sauvegarder ce tournoi
-                        </button>
-                        <button className="button export-button" onClick={exportTournamentData}>
-                            Exporter en JSON
-                        </button>
-                    </div>
-                ) : (
-                    <div className="tournament-action-buttons">
-                        <button className="button cancel-button" onClick={cancelTournament}>
-                            Annuler le tournoi
-                        </button>
-                        <button className="button save-button" onClick={saveTournament}>
-                            Sauvegarder ce tournoi
-                        </button>
-                        <button className="button export-button" onClick={exportTournamentData}>
-                            Exporter en JSON
-                        </button>
-                    </div>
-                )}
-            </div>
-
-            {/* Afficher les statistiques uniquement si le tournoi est en cours ou terminé */}
             {heap.some(item => item !== EMPTY && item !== EXEMPT && item !== "") && (
-                <Stats
-                    heap={heap}
-                    participantNames={participantNames}
-                />
+                <Stats heap={heap} participantNames={participantNames}/>
             )}
         </>
     );

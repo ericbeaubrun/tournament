@@ -1,21 +1,9 @@
 import React from "react";
 import "./ConfirmDialog.scss";
 
-/**
- * Composant de dialogue de confirmation réutilisable
- * 
- * @param {Object} props - Les propriétés du composant
- * @param {boolean} props.isOpen - Indique si le dialogue est ouvert
- * @param {string} props.message - Message à afficher dans la boîte de dialogue
- * @param {string} props.confirmLabel - Texte du bouton de confirmation
- * @param {string} props.cancelLabel - Texte du bouton d'annulation
- * @param {Function} props.onConfirm - Fonction à appeler lors de la confirmation
- * @param {Function} props.onCancel - Fonction à appeler lors de l'annulation
- * @returns {JSX.Element|null} Le composant de dialogue ou null s'il n'est pas ouvert
- */
 const ConfirmDialog = ({
     isOpen,
-    message,
+    message = "Êtes-vous sûr ? Cette action est irréversible.",
     confirmLabel = "Oui, confirmer",
     cancelLabel = "Annuler",
     onConfirm,

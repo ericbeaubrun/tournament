@@ -1,0 +1,216 @@
+@import '../../config/config.scss';
+
+$rename-color: red;
+$background-dark: $bg-1;
+$background-light: #1e1e1e;
+$line-color: #e5e5e5;
+$line-size: 2px;
+
+
+.bracket-columns {
+  display: flex;
+  margin: 0;
+  overflow-x: auto;
+  flex: 1;
+  width: 100%;
+  padding: 48px 0 48px 0;
+
+  .bracket-column {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    flex-direction: column;
+    background-color: transparent;
+    flex: 1;
+  }
+}
+
+.bracket-cell {
+  position: relative;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  flex: 1;
+  color: #797979;
+
+  :hover {
+  }
+
+  background-color: transparent;
+
+  &.state-terminated.color-red,
+  &.state-terminated.color-blue {
+    color: $lose-color;
+  }
+
+  &.state-waiting.color-red,
+  &.state-confrontable.color-red,
+  &.state-waiting.color-blue,
+  &.state-confrontable.color-blue {
+    color: $default-text-color;
+
+  }
+
+  &.color-blue,
+  &.color-red {
+    background-color: transparent;
+  }
+
+  input {
+    color: $default-text-color;
+    font-family: $default-font-family;
+    background-color: $background-dark;
+    padding: 8px;
+    border: $line-size solid $rename-color;
+    z-index: 1;
+    position: relative;
+    display: inline-block;
+    min-height: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1.35rem;
+    width: 50%;
+
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.bracket-cell-content {
+  width: 100%;
+  display: flex;
+  position: relative;
+  z-index: 2;
+}
+
+.bracket-cell-text {
+  width: 100%;
+  display: inline-block;
+  margin: 0 auto;
+}
+
+.bracket-cell-action {
+  width: 0;
+}
+
+.participant-name {
+  background-color: $background-dark;
+  padding: 8px;
+  border: 2px solid $line-color;
+  z-index: 1;
+  position: relative;
+  display: inline-block;
+  min-height: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 120px;
+  max-width: 90%;
+  font-size: 1.35rem;
+}
+
+.win-button {
+  background-color: #53ab4d;
+  color: $default-text-color;
+  border: none;
+  padding: 5px 8px;
+  border-radius: 100%;
+  position: absolute;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 3;
+  pointer-events: auto;
+
+  &:hover {
+    background-color: #46923f;
+  }
+}
+
+.bracket-cell-action {
+  width: 0;
+  pointer-events: none;
+}
+
+.bracket-cell::after {
+  content: "";
+  position: absolute;
+  background-color: $line-color;
+  height: $line-size;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  transform: translateY(-50%);
+}
+
+.odd::before {
+  content: "";
+  position: absolute;
+  background-color: $line-color;
+  width: $line-size;
+  top: 0;
+  right: 0;
+  height: 50%;
+  z-index: 1;
+}
+
+.even::before {
+  content: "";
+  position: absolute;
+  background-color: $line-color;
+
+  width: $line-size;
+  bottom: 0;
+  right: 0;
+  height: 50%;
+  z-index: 1;
+}
+
+.column-last::before {
+  background-color: $background-dark;
+}
+
+.column-last::after {
+  width: 50%;
+}
+
+.column-first::after {
+  transform: translateX(100%);
+  width: 50%;
+}
+
+.tournament-controls {
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+
+.tournament-over-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .bracket-columns {
+    padding: 0;
+  }
+
+  .tournament-over-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .participant-name {
+    min-width: 60px;
+    padding: 6px;
+    font-size: 0.9rem;
+  }
+
+  .win-button {
+    transform: translate(-50px, -8px);
+  }
+}

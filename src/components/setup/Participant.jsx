@@ -3,6 +3,7 @@ import {useDrag, useDrop} from 'react-dnd';
 import {motion} from "framer-motion";
 import draggableIcon from '/src/assets/draggable.svg';
 import './Participant.scss';
+import editIcon from "../../assets/edit.svg";
 
 const Participant = ({name, index, moveParticipant, deleteParticipant, renameParticipant}) => {
     const ref = useRef(null);
@@ -54,19 +55,35 @@ const Participant = ({name, index, moveParticipant, deleteParticipant, renamePar
         <motion.li
             ref={ref}
             className={`item-container2 ${isDragging ? 'dragging' : ''}`}
-            style={{cursor: 'move'}}
+            style={{cursor: isDragging ? 'grabbing' : 'grab'}}
             layout
+            layoutId={`participant-${index}`}
             initial={{opacity: 0, y: -15}}
             animate={{opacity: 1, y: 0}}
             exit={{opacity: 0, y: 15}}
-            transition={{duration: 0.3}}
+            transition={{
+                type: 'spring',
+                stiffness: 500,
+                damping: 30,
+                mass: 1,
+                layoutTransition: {
+                    type: 'spring',
+                    stiffness: 300,
+                    damping: 25
+                }
+            }}
             onDoubleClick={() => setIsRenaming(true)}
+            whileHover={!isDragging ? {scale: 1.01} : {}}
         >
             <img
                 src={draggableIcon}
-                href="draggable"
+                alt="draggable"
                 className="draggable-icon"
-                style={{opacity: isDragging ? 0.5 : 1, cursor: 'move'}}
+                style={{
+                    opacity: isDragging ? 1 : 0.8,
+                    cursor: isDragging ? 'grabbing' : 'grab',
+                    // filter: isDragging ? 'drop-shadow(0 0 3px rgba(255, 204, 0, 0.7))' : 'drop-shadow(1px 1px 0 #000)'
+                }}
             />
             {isRenaming ? (
                 <input
@@ -85,8 +102,13 @@ const Participant = ({name, index, moveParticipant, deleteParticipant, renamePar
                 <span className="participant-name2">{name}</span>
             )}
             <div className="manage-participants-container">
-                <button className="rename-button" onClick={handleRename}>✏️</button>
-                <button className="delete-button" onClick={() => deleteParticipant(index)}>🗑️</button>
+                <button className="rename-button" onClick={handleRename}>
+                    <img src={editIcon}  style={{height:'20px'}} alt="Logo Tournament" className="icon"/>
+
+                </button>
+                <button className="delete-participant-button" onClick={() => deleteParticipant(index)}>
+                    X
+                </button>
             </div>
         </motion.li>
     );

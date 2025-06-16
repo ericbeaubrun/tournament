@@ -1,0 +1,68 @@
+@import '../config/config';
+
+.active-tournament {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.tournament-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+
+  @media (min-width: 992px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.tournament-controls-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  //padding: 12px;
+  padding-top: 24px;
+
+}
+
+.clear-participants-btn, .shuffle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+  }
+}
+
+.start-tournament-container {
+  margin-top: 16px;
+}
+
+.button {
+  padding: 12px 24px;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-family: $default-font-family;
+}
+
+.undo-button {
+  font-weight: normal;
+  font-size: 2rem;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}

@@ -1,13 +1,11 @@
 import {HTML5Backend} from "react-dnd-html5-backend";
 import {DndProvider} from "react-dnd";
-import HomePage from "./homepage/HomePage.jsx";
+import Home from "./components/Home.jsx";
 
-
-// in your JSX
 const App = () => {
     return (
         <DndProvider backend={HTML5Backend}>
-                <HomePage/>
+                <Home/>
         </DndProvider>
     );
 };

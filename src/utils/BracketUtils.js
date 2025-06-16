@@ -12,31 +12,29 @@ export function calculateNextPower2(heap) {
     return Math.pow(2, Math.ceil(Math.log2(calculateLeafSize(heap))));
 }
 
-export function calculate_number_of_exempts(tree) {
+//TODO
+export function calculate_amount_of_exempts(tree) {
     return calculateNextPower2() - tree.length;
 }
 
 export function findConfrontableAdresses(heap, index = 0) {
     if (index >= heap.length) return [];
 
-    const leftChildIndex = 2 * index + 1;
-    const rightChildIndex = 2 * index + 2;
+    const leftIndex = 2 * index + 1;
+    const rightIndex = 2 * index + 2;
 
     const result = [];
 
     if (heap[index] === EMPTY) {
-        if (leftChildIndex < heap.length && heap[leftChildIndex] !== EXEMPT && heap[leftChildIndex] !== EMPTY
-            && rightChildIndex < heap.length && heap[rightChildIndex] !== EXEMPT && heap[rightChildIndex] !== EMPTY) {
-            result.push(leftChildIndex);
-            result.push(rightChildIndex);
+        if (leftIndex < heap.length && heap[leftIndex] !== EXEMPT && heap[leftIndex] !== EMPTY
+            && rightIndex < heap.length && heap[rightIndex] !== EXEMPT && heap[rightIndex] !== EMPTY) {
+            result.push(leftIndex);
+            result.push(rightIndex);
         }
 
     }
 
-    const leftResult = findConfrontableAdresses(heap, leftChildIndex);
-    const rightResult = findConfrontableAdresses(heap, rightChildIndex);
-
-    return result.concat(leftResult, rightResult);
+    return result.concat(findConfrontableAdresses(heap, leftIndex), findConfrontableAdresses(heap, rightIndex));
 }
 
 
@@ -48,9 +46,7 @@ export function collectPredecessorsTmp(heap, index) {
     const left = 2 * index + 1;
     const right = 2 * index + 2;
 
-    return descendants
-        .concat(collectPredecessorsRec(heap, left))
-        .concat(collectPredecessorsRec(heap, right));
+    return descendants.concat(collectPredecessorsRec(heap, left)).concat(collectPredecessorsRec(heap, right));
 }
 
 export function collectPredecessorsRec(heap, index) {
@@ -61,9 +57,7 @@ export function collectPredecessorsRec(heap, index) {
     const left = 2 * index + 1;
     const right = 2 * index + 2;
 
-    return predecessors
-        .concat(collectPredecessorsRec(heap, left))
-        .concat(collectPredecessorsRec(heap, right));
+    return predecessors.concat(collectPredecessorsRec(heap, left)).concat(collectPredecessorsRec(heap, right));
 }
 
 export function collectAllPredecessors(heap, addresses) {
@@ -115,22 +109,22 @@ export const buildHeap = (list) => {
     }
 
     for (let i = length - 2; i >= 0; i--) {
-        const leftChild = heap[2 * i + 1];
-        const rightChild = heap[2 * i + 2];
+        const left = heap[2 * i + 1];
+        const right = heap[2 * i + 2];
 
-        if (leftChild !== EXEMPT && rightChild !== EXEMPT) {
+        if (left !== EXEMPT && right !== EXEMPT) {
             heap[i] = EMPTY;
-        } else if (leftChild === EXEMPT) {
-            heap[i] = rightChild;
-        } else if (rightChild === EXEMPT) {
-            heap[i] = leftChild;
+        } else if (left === EXEMPT) {
+            heap[i] = right;
+        } else if (right === EXEMPT) {
+            heap[i] = left;
         }
     }
 
     return heap;
 };
 
-export const sortParticipantList = (lineCount)  => {
+export const sortParticipantList = (lineCount) => {
     let tmpParticipants = Array.from({length: lineCount}, (_, i) => `${i + 1}`);
 
     const nextPowerOf2 = Math.pow(2, Math.ceil(Math.log2(lineCount)));
