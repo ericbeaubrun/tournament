@@ -1,8 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import "./Home.scss";
 import Tournament from "./Tournament.jsx";
-import "react-toastify/dist/ReactToastify.css";
-import {EMPTY} from "../config/config.js";
+import {EMPTY, MAX_TOURNAMENT_HISTORY} from "../config/config.js";
 import ConfirmDialog from "./dialog/ConfirmDialog.jsx";
 import TournamentHistoryList from "./history/TournamentHistoryList.jsx";
 import Header from "./Header.jsx";
@@ -234,8 +233,6 @@ export default function Home() {
                         lastLoadedTournamentRef.current = 0;
                         setTournamentToLoad(0);
                         setShowSetup(true);
-                    } else {
-                        throw new Error("Format de fichier invalide: données manquantes");
                     }
                 } catch (e) {
                     //TODO
@@ -285,7 +282,7 @@ export default function Home() {
             />
 
             <div className="stats-value">
-                {archivedTournaments ? archivedTournaments.length : 0} tournois récents
+                {archivedTournaments ? archivedTournaments.length : 0}/{MAX_TOURNAMENT_HISTORY} tournois récents
             </div>
 
             <TournamentHistoryList

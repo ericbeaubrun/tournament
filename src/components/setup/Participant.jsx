@@ -1,11 +1,12 @@
 import {useRef, useState} from 'react';
 import {useDrag, useDrop} from 'react-dnd';
 import {motion} from "framer-motion";
-import draggableIcon from '/src/assets/draggable.svg';
+import DraggableIcon from '/src/assets/draggable.svg?react';
 import './Participant.scss';
-import editIcon from "../../assets/edit.svg";
+import EditIcon from '../../assets/edit.svg?react';
 
 const Participant = ({name, index, moveParticipant, deleteParticipant, renameParticipant}) => {
+    const ICON_SIZE = 20;
     const ref = useRef(null);
     const [isRenaming, setIsRenaming] = useState(false);
     const [newName, setNewName] = useState(name);
@@ -55,7 +56,6 @@ const Participant = ({name, index, moveParticipant, deleteParticipant, renamePar
         <motion.li
             ref={ref}
             className={`item-container2 ${isDragging ? 'dragging' : ''}`}
-            style={{cursor: isDragging ? 'grabbing' : 'grab'}}
             layout
             layoutId={`participant-${index}`}
             initial={{opacity: 0, y: -15}}
@@ -75,16 +75,9 @@ const Participant = ({name, index, moveParticipant, deleteParticipant, renamePar
             onDoubleClick={() => setIsRenaming(true)}
             whileHover={!isDragging ? {scale: 1.01} : {}}
         >
-            <img
-                src={draggableIcon}
-                alt="draggable"
-                className="draggable-icon"
-                style={{
-                    opacity: isDragging ? 1 : 0.8,
-                    cursor: isDragging ? 'grabbing' : 'grab',
-                    // filter: isDragging ? 'drop-shadow(0 0 3px rgba(255, 204, 0, 0.7))' : 'drop-shadow(1px 1px 0 #000)'
-                }}
-            />
+
+            <DraggableIcon style={{cursor: isDragging ? 'grabbing' : 'grab'}}width={"34"} height={"34"}/>
+
             {isRenaming ? (
                 <input
                     type="text"
@@ -103,8 +96,7 @@ const Participant = ({name, index, moveParticipant, deleteParticipant, renamePar
             )}
             <div className="manage-participants-container">
                 <button className="rename-button" onClick={handleRename}>
-                    <img src={editIcon}  style={{height:'20px'}} alt="Logo Tournament" className="icon"/>
-
+                    <EditIcon width={ICON_SIZE} height={ICON_SIZE}/>
                 </button>
                 <button className="delete-participant-button" onClick={() => deleteParticipant(index)}>
                     X

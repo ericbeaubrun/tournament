@@ -1,39 +1,34 @@
 import './TournamentControls.scss';
-import exportIcon from "../../assets/export.svg";
-import leaveIcon from "../../assets/leave.svg";
-import React from "react";
+import ExportIcon from "../../assets/export.svg?react";
+import LeaveIcon from "../../assets/leave.svg?react";
 
 
-    export const TournamentControls = ({ tournamentOver, onCancel, onReset, onRestart, onSave, onExport, onUndo }) => {
+export const TournamentControls = ({tournamentOver, onCancel, onReset, onRestart, onSave, onExport, onUndo}) => {
     return (
         <div className="tournament-controls">
-            <button className="button back-button" onClick={onReset}>
-                <img src={leaveIcon} style={{height: '20px'}} alt="Logo Tournament" className=""/>
+            <button className="pixel-btn back-btn" onClick={onReset}>
+                <LeaveIcon width="24" height="24"/>
                 {/*BACK*/}
             </button>
 
             <div className="action-group">
-                <button className="button undo-button" onClick={onUndo}>
+                <button className="pixel-btn undo-btn" onClick={onUndo}>
                     UNDO
                 </button>
                 {/*<button className="button save-button" onClick={onSave}>*/}
                 {/*    SAVE*/}
                 {/*</button>*/}
-                <button className="button export-button" onClick={onExport}>
-                    <img src={exportIcon} style={{height: '20px'}} alt="Logo Tournament" className=""/>
-                    {/*EXPORT*/}
+                <button className="pixel-btn export-btn" onClick={onExport}>
+                    <ExportIcon width="22" height="22"/> {/*EXPORT*/}
                 </button>
                 {
                     tournamentOver ? (
-                        <button className="button restart-button" onClick={onRestart}>
-                            Relancer
+                        <button className="pixel-btn restart-btn" onClick={onRestart}>
+                            RELANCER
                         </button>
                     ) : ''
                 }
-
             </div>
-
-
         </div>
     );
 };

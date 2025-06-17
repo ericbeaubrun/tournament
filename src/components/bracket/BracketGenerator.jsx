@@ -2,10 +2,10 @@ import "./BracketGenerator.scss";
 import "../../App.scss";
 import {useCallback, useMemo, useState} from "react";
 import {DISPLAY_EMPTY, EMPTY, EXEMPT} from "../../config/config.js";
+import {downloadJSON} from "../../utils/fileUtils.js";
 import {collectEmptyNodes, collectNodesWithEmptyNear, findConfrontableAdresses} from "../../utils/BracketUtils.js";
 import Stats from "./Stats.jsx";
-import {TournamentControls} from "./TournamentControls.jsx";
-import {downloadJSON} from "../../utils/fileUtils.js";
+import TournamentControls from "./TournamentControls.jsx";
 
 const BracketGenerator = ({
                               heap,
@@ -61,17 +61,14 @@ const BracketGenerator = ({
     const handleConfirmEdit = useCallback((heapIndex, item) => {
         if (renameParticipant && editValues[heapIndex] !== undefined) {
             const newName = editValues[heapIndex];
-            renameParticipant(item - 1, newName);
-
-            // Mettre à jour la liste des participants avec le nouveau nom
             const updatedParticipantNames = [...participantNames];
+
+            renameParticipant(item - 1, newName);
             updatedParticipantNames[item - 1] = newName;
 
-            // Mise à jour du tournoi dans l'historique lors du renommage
             const newHeap = [...heap];
             setHeapHistory((prevHistory) => {
                 const newHistory = [...prevHistory, newHeap];
-                // Envoyer la liste mise à jour des participants à updateLastTournament
                 updateLastTournament(newHeap, newHistory, updatedParticipantNames);
                 return newHistory;
             });
@@ -154,69 +151,69 @@ const BracketGenerator = ({
         );
     }, [buttonsAddresses, editingCells, editValues, handleConfirmEdit, handleDoubleClick, handleEditChange, handleKeyUp, onWin, participantNames]);
 
-    const renderColumns = useCallback(() => {
-        const columnElements = [];
+    const BracketColumns = useCallback(() => {
         let i = 0;
         let j = 1;
         let offset = 0;
 
-        for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
-            const column = columns[columnIndex];
-            const itemHeight = 50 * Math.pow(2, columnIndex);
-            const itemElements = [];
+        return (
+            <div className="bracket-columns">
+                {columns.map((column, columnIndex) => {
+                    const itemHeight = 50 * Math.pow(2, columnIndex);
+                    const itemElements = [];
 
-            let valMin = heap.length - i - 1;
-            let valMax = heap.length - i - column.length;
+                    let valMin = heap.length - i - 1;
+                    let valMax = heap.length - i - column.length;
 
-            for (let itemIndex = 0; itemIndex < column.length; itemIndex++) {
-                const item = column[itemIndex];
-                const heapIndex = (valMax + valMin) - (heap.length - i - 1);
-                const adrPere = Math.floor((heapIndex - 1) / 2);
-                const groupIndex = Math.floor(itemIndex / 2);
-                const isRed = columnIndex % 2 === 0 ? groupIndex % 2 !== 0 : groupIndex % 2 === 0;
+                    for (let itemIndex = 0; itemIndex < column.length; itemIndex++) {
+                        const item = column[itemIndex];
+                        const heapIndex = (valMax + valMin) - (heap.length - i - 1);
+                        const adrPere = Math.floor((heapIndex - 1) / 2);
+                        const groupIndex = Math.floor(itemIndex / 2);
+                        const isRed = columnIndex % 2 === 0 ? groupIndex % 2 !== 0 : groupIndex % 2 === 0;
 
-                let colorPositionClass = `color-${isRed ? 'red' : 'blue'}`;
-                colorPositionClass += itemIndex % 2 ? " odd" : " even";
-                if (columnIndex === columns.length - 1) colorPositionClass += " column-last";
-                if (columnIndex === 0) colorPositionClass += " column-first";
+                        let colorPositionClass = `color-${isRed ? 'red' : 'blue'}`;
+                        colorPositionClass += itemIndex % 2 ? " odd" : " even";
+                        if (columnIndex === columns.length - 1) colorPositionClass += " column-last";
+                        if (columnIndex === 0) colorPositionClass += " column-first";
 
-                let stateClass = "";
-                if (buttonsAddresses.includes(heapIndex)) {
-                    stateClass = `state-confrontable`;
-                } else if (emptyAddresses.includes(heapIndex)) {
-                    stateClass = `state-waiting`;
-                } else if (aloneAddresses.includes(heapIndex)) {
-                    stateClass = `state-terminated`;
-                }
+                        let stateClass = "";
+                        if (buttonsAddresses.includes(heapIndex)) {
+                            stateClass = `state-confrontable`;
+                        } else if (emptyAddresses.includes(heapIndex)) {
+                            stateClass = `state-waiting`;
+                        } else if (aloneAddresses.includes(heapIndex)) {
+                            stateClass = `state-terminated`;
+                        }
 
-                itemElements.push(
-                    renderCell(
-                        item,
-                        itemIndex,
-                        columnIndex,
-                        heapIndex,
-                        adrPere,
-                        stateClass,
-                        colorPositionClass,
-                        itemHeight,
-                        0 //à rafiner
-                    )
-                );
+                        itemElements.push(
+                            renderCell(
+                                item,
+                                itemIndex,
+                                columnIndex,
+                                heapIndex,
+                                adrPere,
+                                stateClass,
+                                colorPositionClass,
+                                itemHeight,
+                                0 //à rafiner
+                            )
+                        );
 
-                i++;
-            }
+                        i++;
+                    }
 
-            columnElements.push(
-                <ul key={columnIndex} className={`bracket-column bracket-column-${columnIndex + 1}`}>
-                    {itemElements}
-                </ul>
-            );
+                    j *= 2;
+                    offset += j;
 
-            j *= 2;
-            offset += j;
-        }
-
-        return columnElements;
+                    return (
+                        <ul key={columnIndex} className={`bracket-column bracket-column-${columnIndex + 1}`}>
+                            {itemElements}
+                        </ul>
+                    );
+                })}
+            </div>
+        );
     }, [columns, heap, buttonsAddresses, emptyAddresses, aloneAddresses, renderCell]);
 
     const exportTournamentData = useCallback(() => {
@@ -243,13 +240,9 @@ const BracketGenerator = ({
                 onUndo={undoAction}
             />
 
-            <div className="bracket-columns">
-                {renderColumns()}
-            </div>
+            <BracketColumns/>
 
-            {heap.some(item => item !== EMPTY && item !== EXEMPT && item !== "") && (
-                <Stats heap={heap} participantNames={participantNames}/>
-            )}
+            <Stats heap={heap} participantNames={participantNames}/>
         </>
     );
 };

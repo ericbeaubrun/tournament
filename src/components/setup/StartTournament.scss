@@ -1,6 +1,7 @@
 @import '../../config/config';
 
 .start-tournament-btn {
+  background-color: #3a3a3a;
   font-family: $default-font-family;
   position: sticky;
   bottom: 0;
@@ -9,11 +10,6 @@
   font-size: 1.4rem;
   letter-spacing: 2px;
   text-transform: uppercase;
-  background-color: #1e3d1e;
-  background-color: #3a3a3a;
-  //background-color: #254a7c;
-
-  border: 3px solid #2c5c2c;
   border: 3px solid #595959;
   color: $default-text-color;
   border-bottom: 6px solid #2c2c2c;
@@ -25,9 +21,7 @@
 
   &:hover {
     transform: translateY(-2px);
-    background-color: #234923;
-    background-color: #28548f;
-    background-color: #254a7c;
+    background-color: #444444;
     box-shadow: 0 8px 0 #000, inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
 

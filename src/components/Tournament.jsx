@@ -1,10 +1,8 @@
 import "../App.scss";
 import "./Tournament.scss";
-import "react-toastify/dist/ReactToastify.css";
 import BracketGenerator from "./bracket/BracketGenerator.jsx";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {EMPTY, EXEMPT, PARTICIPANTS_ANIMATION_DURATION} from "../config/config.js";
-import {toast} from "react-toastify";
 import ParticipantList from "./setup/ParticipantList.jsx";
 import {buildHeap, sortParticipantList} from "../utils/BracketUtils.js";
 import useParticipants from "../hooks/useParticipants.js";
@@ -46,7 +44,6 @@ const Tournament = ({
     } = useParticipants({
         setIsAnimating,
         PARTICIPANTS_ANIMATION_DURATION,
-        toast
     });
 
     const {
@@ -63,7 +60,6 @@ const Tournament = ({
         setHeapHistory,
         setIsTournamentStarted: setIsStarted,
         setIsTournamentOver: setIsOver,
-        toast
     });
 
     const cancelTournament = useCallback(() => {

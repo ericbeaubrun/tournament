@@ -87,7 +87,7 @@ const Stats = ({heap, participantNames}) => {
                     {playerStats.map((player, index) => (
                         <tr key={index} className={winner === player.name ? "winner-row" : ""}>
                             <td className="player-name">
-                                {winner === player.name && <span className="winner-indicator">#1</span>}
+                                {/*{winner === player.name && <span className="winner-indicator">#1</span>}*/}
                                 {player.name}
                             </td>
                             <td>{player.wins + player.losses}</td>

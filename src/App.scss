@@ -16,36 +16,36 @@ body {
 }
 
 .button {
-  background-color: #2a2a2a;
-  color: $default-text-color;
-  border: 2px solid #444;
-  border-bottom: 4px solid #222;
-  border-radius: 4px;
-  padding: 10px 16px;
-  margin: 5px;
-  cursor: pointer;
-  font-family: $default-font-family;
-  font-size: 1.1rem;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 0 #000;
-  text-shadow: 1px 1px 0 #000;
-  letter-spacing: 1px;
-
-  &:hover {
-    background-color: #333;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 0 #000;
-  }
-
-  &:active {
-    transform: translateY(2px);
-    border-bottom: 2px solid #222;
-    box-shadow: 0 2px 0 #000;
-  }
-
-  &:focus {
-    outline: none;
-  }
+  //background-color: #2a2a2a;
+  //color: $default-text-color;
+  //border: 2px solid #444;
+  //border-bottom: 4px solid #222;
+  //border-radius: 4px;
+  //padding: 10px 16px;
+  //margin: 5px;
+  //cursor: pointer;
+  //font-family: $default-font-family;
+  //font-size: 1.1rem;
+  //transition: all 0.2s ease;
+  //box-shadow: 0 4px 0 #000;
+  //text-shadow: 1px 1px 0 #000;
+  //letter-spacing: 1px;
+  //
+  //&:hover {
+  //  background-color: #333;
+  //  transform: translateY(-2px);
+  //  box-shadow: 0 6px 0 #000;
+  //}
+  //
+  //&:active {
+  //  transform: translateY(2px);
+  //  border-bottom: 2px solid #222;
+  //  box-shadow: 0 2px 0 #000;
+  //}
+  //
+  //&:focus {
+  //  outline: none;
+  //}
 }
 
 ul {
@@ -65,18 +65,43 @@ ul {
   outline-offset: 2px;
 }
 
-.logo {
-  width: 64px;
-  height: 64px;
-  display: block;
-  object-fit: contain;
-  margin: 0 auto;
-}
-
 .icon {
   width: 24px;
   height: 24px;
   display: block;
   object-fit: contain;
   margin: 0 auto;
+}
+
+.pixel-btn {
+  font-family: $default-font-family;
+  color: $default-text-color;
+  background-color: #2d2d2d;
+  border: 2px solid #444;
+  box-shadow: 0 4px 0 #000;
+  padding: 6px 10px;
+  position: relative;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 0 #000;
+    background-color: $btn-hover-color;
+  }
+
+  &:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #000;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: 0 2px 0 #000;
+  }
 }

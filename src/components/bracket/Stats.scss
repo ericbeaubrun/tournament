@@ -16,14 +16,7 @@ $pixel-shadow-color: #111;
   margin-top: 32px;
   margin-bottom: 96px;
   padding: 20px;
-  //width: 90%;
   width: 88%;
-  //background-color: $pixel-bg-color;
-  //border: $pixel-border-size solid $pixel-border-color;
-  //border-bottom: $pixel-border-size + 2px solid darken($pixel-border-color, 10%);
-  //border-right: $pixel-border-size + 2px solid darken($pixel-border-color, 10%);
-  //box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.2);
-  //letter-spacing: 1px;
 
   .stats-title {
     text-align: center;
@@ -46,16 +39,7 @@ $pixel-shadow-color: #111;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 20px 0;
-    padding: 10px;
-    //background-color: rgba(85, 68, 0, 0.2);
-    //border: $pixel-border-size solid $pixel-winner-color;
-    //border-bottom: $pixel-border-size + 2px solid darken($pixel-winner-color, 10%);
-    //border-right: $pixel-border-size + 2px solid darken($pixel-winner-color, 10%);
-
-    border: $pixel-border-size solid $pixel-border-color;
-    border-bottom: $pixel-border-size + 2px solid darken($pixel-border-color, 10%);
-    border-right: $pixel-border-size + 2px solid darken($pixel-border-color, 10%);
+    padding-bottom: 20px;
 
     .winner-trophy {
       margin-bottom: 10px;
@@ -66,9 +50,8 @@ $pixel-shadow-color: #111;
     }
 
     .winner-name {
-      font-size: 1.2rem;
-      //font-weight: bold;
-      color: $win-color;
+      font-size: 1.5rem;
+      color: $default-text-color;
       text-shadow: 2px 2px 0 #000;
       text-transform: uppercase;
     }
@@ -114,15 +97,10 @@ $pixel-shadow-color: #111;
         &:nth-child(even) {
           background-color: $pixel-row-alt-bg;
         }
-
-        //&:hover {
-        //  background-color: lighten($pixel-row-bg, 5%);
-        //}
       }
 
       .player-name {
         text-align: left;
-        //font-weight: bold;
       }
 
       .wins-column {
@@ -138,20 +116,7 @@ $pixel-shadow-color: #111;
       }
 
       .winner-row {
-        background-color: rgba(255, 215, 0, 0.1);
-
-        td {
-          //border-left: 2px solid $pixel-winner-color;
-          //border-right: 2px solid $pixel-winner-color;
-
-          &:first-child {
-            //border-left: 4px solid $pixel-winner-color;
-          }
-
-          &:last-child {
-            //border-right: 4px solid $pixel-winner-color;
-          }
-        }
+        background-color: rgba(0, 255, 60, 0.1);
       }
 
       .winner-indicator {

@@ -1,21 +1,21 @@
 import {EXEMPT, EMPTY} from "../config/config.js";
 
-export function calculateHight(heap) {
+export function calculateHeight(heap) {
     return Math.floor(Math.log2(heap.length));
 }
 
 export function calculateLeafSize(heap) {
-    return Math.pow(2, calculateHight(heap));
+    return Math.pow(2, calculateHeight(heap));
 }
 
-export function calculateNextPower2(heap) {
-    return Math.pow(2, Math.ceil(Math.log2(calculateLeafSize(heap))));
-}
+// export function calculateNextPower2(heap) {
+//     return Math.pow(2, Math.ceil(Math.log2(calculateLeafSize(heap))));
+// }
 
 //TODO
-export function calculate_amount_of_exempts(tree) {
-    return calculateNextPower2() - tree.length;
-}
+// export function calculate_amount_of_exempts(tree) {
+//     return calculateNextPower2() - tree.length;
+// }
 
 export function findConfrontableAdresses(heap, index = 0) {
     if (index >= heap.length) return [];
@@ -60,13 +60,13 @@ export function collectPredecessorsRec(heap, index) {
     return predecessors.concat(collectPredecessorsRec(heap, left)).concat(collectPredecessorsRec(heap, right));
 }
 
-export function collectAllPredecessors(heap, addresses) {
-    const results = {};
-    addresses.forEach(index => {
-        results[index] = collectPredecessorsTmp(heap, index);
-    });
-    return results;
-}
+// export function collectAllPredecessors(heap, addresses) {
+//     const results = {};
+//     addresses.forEach(index => {
+//         results[index] = collectPredecessorsTmp(heap, index);
+//     });
+//     return results;
+// }
 
 export function collectEmptyNodes(heap, index = 0) {
     if (index >= heap.length || heap[index] !== EMPTY) return [];

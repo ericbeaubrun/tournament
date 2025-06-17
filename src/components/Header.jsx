@@ -1,8 +1,9 @@
-import logo from "../assets/tournament.svg";
-import deleteIcon from "../assets/delete.svg";
 import ConfirmDialog from "./dialog/ConfirmDialog.jsx";
 import "./Header.scss";
-import shuffleIcon from "../assets/arrow.svg";
+
+import Logo from "../assets/tournament.svg?react";
+import DeleteIcon from "../assets/delete.svg?react";
+import ImportIcon from '../assets/arrow.svg?react';
 
 
 export const Header = ({
@@ -20,18 +21,18 @@ export const Header = ({
                 onClick={onNavigateHome}
                 title="Retour à l'accueil"
             >
-                <img src={logo} alt="Logo Tournament" className="logo"/>
+                <Logo width="72" height="72"/>
                 <h1 className="title">EASY Bracket Generator</h1>
             </div>
 
             <div className="header-actions">
                 <div className="clear-all-history-common">
                     <button
-                        className="reset-history-btn reset-all-common-btn"
+                        className="pixel-btn reset-history-btn"
                         onClick={onResetHistory}
                         title="Supprime tout l'historique, y compris les favoris"
                     >
-                        <img src={deleteIcon} style={{height: "24px"}} alt="Logo Tournament" className="icon"/>
+                        <DeleteIcon width="24" height="24"/>
                     </button>
                     <ConfirmDialog
                         isOpen={isConfirmDialogOpen}
@@ -41,14 +42,14 @@ export const Header = ({
                 </div>
 
                 <button
-                    className="import-button"
+                    className="pixel-btn import-button"
                     onClick={onImportTournament}
                     title="Importer un tournoi à partir d'un fichier JSON"
                 >
                 <span className="import-icon">
-                    <img src={shuffleIcon} alt="Mélanger les participants" className="icon"/>
+                    <ImportIcon width="22" height="22"/>
                 </span>
-                    Importer un tournoi
+                    IMPORT TOURNAMENT
                 </button>
             </div>
         </header>

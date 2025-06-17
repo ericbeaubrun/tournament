@@ -6,7 +6,6 @@ $background-light: #1e1e1e;
 $line-color: #e5e5e5;
 $line-size: 2px;
 
-
 .bracket-columns {
   display: flex;
   margin: 0;
@@ -33,12 +32,11 @@ $line-size: 2px;
   justify-content: center;
   transition: background-color 0.3s ease;
   flex: 1;
+  background-color: transparent;
   color: #797979;
 
-  :hover {
-  }
-
-  background-color: transparent;
+  //:hover {
+  //}
 
   &.state-terminated.color-red,
   &.state-terminated.color-blue {
@@ -72,7 +70,6 @@ $line-size: 2px;
     text-overflow: ellipsis;
     font-size: 1.35rem;
     width: 50%;
-
 
     &:focus {
       outline: none;
@@ -160,7 +157,6 @@ $line-size: 2px;
   content: "";
   position: absolute;
   background-color: $line-color;
-
   width: $line-size;
   bottom: 0;
   right: 0;
@@ -187,7 +183,6 @@ $line-size: 2px;
   justify-content: center;
   width: 100%;
 }
-
 
 .tournament-over-buttons {
   display: flex;
